@@ -18,85 +18,117 @@ def save_tasks(tasks):
         for task in tasks:
             file.write(f"{task}\n")
 
-def add_task(description):
-    """Add a new task to the list."""
+def add_task():
+    """Add a new task to the list interactively."""
+    task_name = input("Enter task name: ").strip()
+    if not task_name:
+        print("Task name cannot be empty. Please try again.")
+        return
+
+    description = input("Enter task description: ").strip()
     tasks = load_tasks()
-    tasks.append(f"[ ] {description}")
+    tasks.append(f"[ ] {task_name}: {description}")
     save_tasks(tasks)
-    print(f"Task added: {description}")
+    print(f"\nTask added successfully: {task_name}")
 
 def list_tasks():
-    """View all pending tasks."""
+    """View all tasks, separating pending and completed ones."""
     tasks = load_tasks()
     if not tasks:
         print("No tasks found.")
         return
+
     print("\nPending Tasks:")
-    for idx, task in enumerate(tasks, start=1):
-        if task.startswith("[ ]"):
+    pending_tasks = [task for task in tasks if task.startswith("[ ]")]
+    if pending_tasks:
+        for idx, task in enumerate(pending_tasks, start=1):
             print(f"{idx}. {task[4:]}")
-    print()
+    else:
+        print("No pending tasks.")
 
-def complete_task(task_number):
-    """Mark a task as completed."""
+    print("\nCompleted Tasks:")
+    completed_tasks = [task for task in tasks if task.startswith("[x]")]
+    if completed_tasks:
+        for idx, task in enumerate(completed_tasks, start=1):
+            print(f"{idx}. {task[4:]}")
+    else:
+        print("No completed tasks.")
+
+def complete_task():
+    """Mark a task as completed interactively."""
     tasks = load_tasks()
-    if 0 < task_number <= len(tasks):
-        task = tasks[task_number - 1]
-        if task.startswith("[ ]"):
-            tasks[task_number - 1] = task.replace("[ ]", "[x]", 1)
+    pending_tasks = [task for task in tasks if task.startswith("[ ]")]
+
+    if not pending_tasks:
+        print("No pending tasks to complete.")
+        return
+
+    print("\nPending Tasks:")
+    for idx, task in enumerate(pending_tasks, start=1):
+        print(f"{idx}. {task[4:]}")
+
+    try:
+        task_number = int(input("\nEnter the number of the task to complete: "))
+        if 1 <= task_number <= len(pending_tasks):
+            task_idx = tasks.index(pending_tasks[task_number - 1])
+            tasks[task_idx] = tasks[task_idx].replace("[ ]", "[x]", 1)
             save_tasks(tasks)
-            print(f"Task completed: {task[4:]}")
+            print(f"Task completed successfully: {pending_tasks[task_number - 1][4:]}")
         else:
-            print("Task is already completed.")
-    else:
-        print("Invalid task number.")
+            print("Invalid task number. Please try again.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
 
-def delete_task(task_number):
-    """Delete a task from the list."""
+def delete_task():
+    """Delete a task interactively."""
     tasks = load_tasks()
-    if 0 < task_number <= len(tasks):
-        task = tasks.pop(task_number - 1)
-        save_tasks(tasks)
-        print(f"Task deleted: {task[4:]}")
-    else:
-        print("Invalid task number.")
+
+    if not tasks:
+        print("No tasks to delete.")
+        return
+
+    print("\nTasks:")
+    for idx, task in enumerate(tasks, start=1):
+        print(f"{idx}. {task[4:]}")
+
+    try:
+        task_number = int(input("\nEnter the number of the task to delete: "))
+        if 1 <= task_number <= len(tasks):
+            task = tasks.pop(task_number - 1)
+            save_tasks(tasks)
+            print(f"Task deleted successfully: {task[4:]}")
+        else:
+            print("Invalid task number. Please try again.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
 
 def main():
     """Main function to handle command-line arguments."""
-    if len(sys.argv) < 2:
-        print("Usage: python task_manager.py <command> [options]")
-        print("Commands:")
-        print("  add <task_description>  - Add a new task")
-        print("  list                    - View all pending tasks")
-        print("  complete <task_number>  - Mark a task as completed")
-        print("  delete <task_number>    - Delete a task")
-        return
+    print("\n--- Task Manager ---")
+    print("1. Add a Task")
+    print("2. List Tasks")
+    print("3. Complete a Task")
+    print("4. Delete a Task")
+    print("5. Exit")
 
-    command = sys.argv[1]
-
-    if command == 'add':
-        if len(sys.argv) < 3:
-            print("Error: Task description is required.")
-        else:
-            description = " ".join(sys.argv[2:])
-            add_task(description)
-    elif command == 'list':
-        list_tasks()
-    elif command == 'complete':
-        if len(sys.argv) < 3 or not sys.argv[2].isdigit():
-            print("Error: Task number is required.")
-        else:
-            task_number = int(sys.argv[2])
-            complete_task(task_number)
-    elif command == 'delete':
-        if len(sys.argv) < 3 or not sys.argv[2].isdigit():
-            print("Error: Task number is required.")
-        else:
-            task_number = int(sys.argv[2])
-            delete_task(task_number)
-    else:
-        print(f"Unknown command: {command}")
-        print("Available commands: add, list, complete, delete")
+    while True:
+        try:
+            choice = int(input("\nEnter your choice (1-5): "))
+            if choice == 1:
+                add_task()
+            elif choice == 2:
+                list_tasks()
+            elif choice == 3:
+                complete_task()
+            elif choice == 4:
+                delete_task()
+            elif choice == 5:
+                print("Exiting Task Manager. Goodbye!")
+                break
+            else:
+                print("Invalid choice. Please enter a number between 1 and 5.")
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 5.")
 
 if __name__ == "__main__":
     main()

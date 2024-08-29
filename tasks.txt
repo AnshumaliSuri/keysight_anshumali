@@ -1,1 +1,1 @@
-[ ] Buy Groceries
+[ ] new task: enhanced cli tool
