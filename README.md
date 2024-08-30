@@ -28,6 +28,7 @@ This is a simple command-line interface (CLI) tool for managing tasks. The tool 
    python task_manager.py
 
 3. **Example usage**:
+
    --- Task Manager ---
     1. Add a Task
     2. List Tasks
