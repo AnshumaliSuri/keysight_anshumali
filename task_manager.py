@@ -1,11 +1,8 @@
-import sys
 import os
 
-# Path to the file where tasks will be stored
 TASKS_FILE = 'tasks.txt'
 
 def load_tasks():
-    """Load tasks from the tasks.txt file."""
     if not os.path.exists(TASKS_FILE):
         return []
     with open(TASKS_FILE, 'r') as file:
@@ -13,13 +10,11 @@ def load_tasks():
     return tasks
 
 def save_tasks(tasks):
-    """Save tasks to the tasks.txt file."""
     with open(TASKS_FILE, 'w') as file:
         for task in tasks:
             file.write(f"{task}\n")
 
 def add_task():
-    """Add a new task to the list interactively."""
     task_name = input("Enter task name: ").strip()
     if not task_name:
         print("Task name cannot be empty. Please try again.")
@@ -32,7 +27,6 @@ def add_task():
     print(f"\nTask added successfully: {task_name}")
 
 def list_tasks():
-    """View all tasks, separating pending and completed ones."""
     tasks = load_tasks()
     if not tasks:
         print("No tasks found.")
@@ -55,7 +49,6 @@ def list_tasks():
         print("No completed tasks.")
 
 def complete_task():
-    """Mark a task as completed interactively."""
     tasks = load_tasks()
     pending_tasks = [task for task in tasks if task.startswith("[ ]")]
 
@@ -80,7 +73,6 @@ def complete_task():
         print("Invalid input. Please enter a number.")
 
 def delete_task():
-    """Delete a task interactively."""
     tasks = load_tasks()
 
     if not tasks:
@@ -103,7 +95,6 @@ def delete_task():
         print("Invalid input. Please enter a number.")
 
 def main():
-    """Main function to handle command-line arguments."""
     print("\n--- Task Manager ---")
     print("1. Add a Task")
     print("2. List Tasks")

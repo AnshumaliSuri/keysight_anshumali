@@ -1,1 +1,4 @@
-[ ] new task: enhanced cli tool
+[x] new task: enhanced cli tool
+[ ] Buy groceries: Buy milk, egg , bread
+[ ] Study: Study maths, physics, Coding
+[ ] interview: Give interview for company abc
